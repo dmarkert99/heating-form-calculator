@@ -31,9 +31,9 @@ const HeatingForm = () => {
     livingSpace: "",
     occupants: "",
     condensingBoiler: false,
-    roofCondition: "gut",
-    facadeCondition: "gut",
-    wallCondition: "gut",
+    roofCondition: "unsaniert",
+    facadeCondition: "unsaniert",
+    wallCondition: "unsaniert",
     energyConsumption: "",
   });
 
@@ -100,7 +100,7 @@ const HeatingForm = () => {
                 handleInputChange("condensingBoiler", checked)
               }
             />
-            <Label htmlFor="condensingBoiler">Brennwertgerät vorhanden</Label>
+            <Label htmlFor="condensingBoiler">Brennwertgerät</Label>
           </div>
 
           <div className="space-y-2">
@@ -113,10 +113,9 @@ const HeatingForm = () => {
                 <SelectValue placeholder="Wählen Sie den Zustand" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sehr_gut">Sehr gut</SelectItem>
-                <SelectItem value="gut">Gut</SelectItem>
-                <SelectItem value="mittel">Mittel</SelectItem>
-                <SelectItem value="schlecht">Schlecht</SelectItem>
+                <SelectItem value="saniert">saniert</SelectItem>
+                <SelectItem value="teilsaiert">teilsaniert</SelectItem>
+                <SelectItem value="unsaniert">unsaniert</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -133,10 +132,9 @@ const HeatingForm = () => {
                 <SelectValue placeholder="Wählen Sie den Zustand" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sehr_gut">Sehr gut</SelectItem>
-                <SelectItem value="gut">Gut</SelectItem>
-                <SelectItem value="mittel">Mittel</SelectItem>
-                <SelectItem value="schlecht">Schlecht</SelectItem>
+                <SelectItem value="saniert">saniert</SelectItem>
+                <SelectItem value="teilsaiert">teilsaniert</SelectItem>
+                <SelectItem value="unsaniert">unsaniert</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -151,10 +149,9 @@ const HeatingForm = () => {
                 <SelectValue placeholder="Wählen Sie den Zustand" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="sehr_gut">Sehr gut</SelectItem>
-                <SelectItem value="gut">Gut</SelectItem>
-                <SelectItem value="mittel">Mittel</SelectItem>
-                <SelectItem value="schlecht">Schlecht</SelectItem>
+                <SelectItem value="saniert">saniert</SelectItem>
+                <SelectItem value="teilsaiert">teilsaniert</SelectItem>
+                <SelectItem value="unsaniert">unsaniert</SelectItem>
               </SelectContent>
             </Select>
           </div>

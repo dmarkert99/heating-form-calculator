@@ -32,20 +32,20 @@ export const calculateHeatingLoad = (data: BuildingData): CalculationResults => 
   const conditions = [data.roofCondition, data.facadeCondition, data.wallCondition];
   const conditionFactors = conditions.map(condition => {
     switch (condition) {
-      case "unsaniert": return 1;
-      case "teilsaniert": return 0.925;
-      case "saniert": return 0.85;
-      default: return 1.0;
+      case "unsaniert": return 0;
+      case "teilsaniert": return 0.075;
+      case "saniert": return 0.15;
+      default: return 0;
     }
   });
 
-  const averageConditionFactor = conditionFactors.reduce((a, b) => a + b, 0) / conditionFactors.length;
+  const averageConditionFactor = conditionFactors.reduce((a, b) => a + b, 0);
   
   // Brennwertgerät-Faktor
   const condensingBoilerFactor = data.condensingBoiler ? 0.92 : 0.85;
 
   // Spezifische Heizlast berechnen
-  const specificHeatingLoad = baseLoadFactor * averageConditionFactor * condensingBoilerFactor;
+  const specificHeatingLoad = baseLoadFactor * averageConditionFactor * (1-condensingBoilerFactor);
 
   // Wohnfläche
   const livingSpace = parseFloat(data.livingSpace) || 0;

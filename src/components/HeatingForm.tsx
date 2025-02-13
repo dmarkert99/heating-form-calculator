@@ -130,7 +130,7 @@ export const HeatingForm = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="saniert">saniert</SelectItem>
-                <SelectItem value="teilsaiert">teilsaniert</SelectItem>
+                <SelectItem value="teilsaniert">teilsaniert</SelectItem>
                 <SelectItem value="unsaniert">unsaniert</SelectItem>
               </SelectContent>
             </Select>
@@ -149,7 +149,7 @@ export const HeatingForm = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="saniert">saniert</SelectItem>
-                <SelectItem value="teilsaiert">teilsaniert</SelectItem>
+                <SelectItem value="teilsaniert">teilsaniert</SelectItem>
                 <SelectItem value="unsaniert">unsaniert</SelectItem>
               </SelectContent>
             </Select>
@@ -166,7 +166,7 @@ export const HeatingForm = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="saniert">saniert</SelectItem>
-                <SelectItem value="teilsaiert">teilsaniert</SelectItem>
+                <SelectItem value="teilsaniert">teilsaniert</SelectItem>
                 <SelectItem value="unsaniert">unsaniert</SelectItem>
               </SelectContent>
             </Select>

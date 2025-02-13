@@ -41,7 +41,7 @@ const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
             Wohnfläche: {formData.livingSpace} m²
           </p>
           <p className="text-sm font-medium text-primary">
-            Grundlast gesamt: {Math.round(results.baseHeatingLoad)} W
+            Grundlast gesamt: {Math.round(results.unreducedLoad*100)/100} kW
           </p>
         </div>
         
@@ -55,7 +55,7 @@ const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               Last pro Person: 300 W
             </p>
             <p className="text-sm font-medium text-primary">
-              Personenlast gesamt: {results.occupantsSupplement} W
+              Personenlast gesamt: {results.occupantsSupplement} kW
             </p>
           </div>
         )}
@@ -63,23 +63,20 @@ const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         {results.roofReduction+results.windowsReduction+results.facadeReduction > 0 && (
           <div className="space-y-2">
             <h4 className="font-medium">3. Reduktionen durch Sanierung</h4>
-            {results.roofReduction > 0 && (
+            
               <p className="text-sm text-gray-600">
                 Dach: -{100*results.roofReduction}%
               </p>
-            )}
-            {results.windowsReduction > 0 && (
               <p className="text-sm text-gray-600">
                 Fenster: -{100*results.windowsReduction}%
               </p>
-            )}
-            {results.facadeReduction > 0 && (
+            
               <p className="text-sm text-gray-600">
                 Fassade: -{100*results.facadeReduction}%
               </p>
-            )}
+            
             <p className="text-sm font-medium text-primary">
-              Reduktion gesamt: -{Math.round((results.unreducedLoad-results.baseHeatingLoad)*100)/100} kW ({(results.roofReduction+results.windowsReduction+results.facadeReduction) * 100}%)
+              Reduktion gesamt: -{Math.round((results.unreducedLoad-results.baseHeatingLoad)*100)/100} kW ({Math.round((results.roofReduction+results.windowsReduction+results.facadeReduction) * 100)}%)
             </p>
           </div>
         )}

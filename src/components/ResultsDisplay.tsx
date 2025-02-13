@@ -10,48 +10,93 @@ interface ResultsDisplayProps {
 const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Ergebnisse</h2>
-
-      <div className="space-y-4">
-        <Card className="p-4 bg-white/50 backdrop-blur-sm">
-          <h3 className="text-lg font-medium mb-2">Gesamte Heizlast</h3>
-          <p className="text-3xl font-bold text-gray-900">
-            {results.totalHeatingLoad.toFixed(2)} kW
-          </p>
-        </Card>
-
-        <Card className="p-4 bg-white/50 backdrop-blur-sm">
-          <h3 className="text-lg font-medium mb-2">Personenzuschlag</h3>
-          <p className="text-3xl font-bold text-gray-900">
-            {results.occupantsSupplement.toFixed(2)} kW
-          </p>
-          <p className="text-sm text-gray-500 mt-1">
-            (300W pro Person)
-          </p>
-        </Card>
-
-        <Card className="p-4 bg-white/50 backdrop-blur-sm">
-          <h3 className="text-lg font-medium mb-2">Detaillierte Berechnung</h3>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Spezifische Heizlast:</span>
-              <span className="font-medium">
-                {results.specificHeatingLoad.toFixed(2)} W/m²
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Wohnfläche:</span>
-              <span className="font-medium">{formData.livingSpace} m²</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Grundheizlast:</span>
-              <span className="font-medium">
-                {results.baseHeatingLoad.toFixed(2)} kW
-              </span>
-            </div>
-          </div>
-        </Card>
+      <div className="grid grid-cols-2 gap-4">
+      <div className="bg-primary/10 p-4 rounded-lg">
+        <p className="text-sm text-gray-600">Maximale Heizlast</p>
+        <p className="text-2xl font-bold text-primary">
+          {`${Math.round(results.baseHeatingLoad*100)/100} kW`}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          {`${Math.round(results.specificHeatingLoad*100)/100} W/m²`}
+        </p>
       </div>
+      <div className="bg-primary/10 p-4 rounded-lg">
+        <p className="text-sm text-gray-600">Personenzuschlag</p>
+        <p className="text-2xl font-bold text-primary">
+        {`${results.occupantsSupplement} kW`}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">300 W pro Person</p>
+      </div>
+    </div>
+    <div className="bg-primary/5 p-6 rounded-lg space-y-4">
+      <h3 className="text-lg font-medium border-b pb-2">Detaillierte Heizlastberechnung</h3>
+      
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <h4 className="font-medium">1. Grundlast</h4>
+          <p className="text-sm text-gray-600">
+            Spezifische Heizlast: {formData.livingSpace=="" ? 0 :Math.round(results.unreducedLoad/parseInt(formData.livingSpace)*100*1000)/100} W/m²
+          </p>
+          <p className="text-sm text-gray-600">
+            Wohnfläche: {formData.livingSpace} m²
+          </p>
+          <p className="text-sm font-medium text-primary">
+            Grundlast gesamt: {Math.round(results.baseHeatingLoad)} W
+          </p>
+        </div>
+        
+        {parseInt(formData.occupants) > 0 && (
+          <div className="space-y-2">
+            <h4 className="font-medium">2. Personenlast</h4>
+            <p className="text-sm text-gray-600">
+              Anzahl Personen: {formData.occupants}
+            </p>
+            <p className="text-sm text-gray-600">
+              Last pro Person: 300 W
+            </p>
+            <p className="text-sm font-medium text-primary">
+              Personenlast gesamt: {results.occupantsSupplement} W
+            </p>
+          </div>
+        )}
+
+        {results.roofReduction+results.windowsReduction+results.facadeReduction > 0 && (
+          <div className="space-y-2">
+            <h4 className="font-medium">3. Reduktionen durch Sanierung</h4>
+            {results.roofReduction > 0 && (
+              <p className="text-sm text-gray-600">
+                Dach: -{100*results.roofReduction}%
+              </p>
+            )}
+            {results.windowsReduction > 0 && (
+              <p className="text-sm text-gray-600">
+                Fenster: -{100*results.windowsReduction}%
+              </p>
+            )}
+            {results.facadeReduction > 0 && (
+              <p className="text-sm text-gray-600">
+                Fassade: -{100*results.facadeReduction}%
+              </p>
+            )}
+            <p className="text-sm font-medium text-primary">
+              Reduktion gesamt: -{Math.round((results.unreducedLoad-results.baseHeatingLoad)*100)/100} kW ({(results.roofReduction+results.windowsReduction+results.facadeReduction) * 100}%)
+            </p>
+          </div>
+        )}
+
+        <div className="pt-4 border-t mt-4">
+          <h4 className="font-medium text-lg">Gesamte Heizlast</h4>
+          <div className="flex items-baseline gap-2">
+            <p className="text-2xl font-bold text-primary">
+              {Math.round(results.totalHeatingLoad*100)/100} kW
+            </p>
+            <p className="text-sm text-gray-600">
+              ({formData.livingSpace=="" ? 0 :  Math.round(100*1000*results.totalHeatingLoad/parseInt(formData.livingSpace))/100} W/m²)
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
   );
 };

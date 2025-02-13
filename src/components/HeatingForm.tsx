@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,6 +13,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateHeatingLoad } from "@/lib/heatingCalculations";
+import { Calculator, Home } from "lucide-react";
 
 interface BuildingData {
   constructionYear: string;
@@ -21,11 +22,22 @@ interface BuildingData {
   condensingBoiler: boolean;
   roofCondition: string;
   facadeCondition: string;
-  wallCondition: string;
+  windowsCondition: string;
   energyConsumption: string;
 }
 
-const HeatingForm = () => {
+export var heatData={
+  specificHeatingLoad: 0 ,
+  baseHeatingLoad: 0,
+  occupantsSupplement:0,
+  totalHeatingLoad:0,
+  roofReduction:0,
+  windowsReduction:0,
+  facadeReduction:0,
+  unreducedLoad: 0
+}
+
+export const HeatingForm = () => {
   const [formData, setFormData] = useState<BuildingData>({
     constructionYear: "",
     livingSpace: "",
@@ -33,7 +45,7 @@ const HeatingForm = () => {
     condensingBoiler: false,
     roofCondition: "unsaniert",
     facadeCondition: "unsaniert",
-    wallCondition: "unsaniert",
+    windowsCondition: "unsaniert",
     energyConsumption: "",
   });
 
@@ -47,15 +59,19 @@ const HeatingForm = () => {
     }));
   };
 
-  const results = calculateHeatingLoad(formData);
+  heatData = calculateHeatingLoad(formData);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div className="space-y-6">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-          Gebäudedaten
-        </h2>
-
+    <div className="grid md:grid-cols-2 gap-6">
+      <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Home className="h-5 w-5" />
+              Gebäudedaten
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+      <div className="space-y-2">
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="constructionYear">Baujahr</Label>
@@ -91,7 +107,7 @@ const HeatingForm = () => {
               onChange={(e) => handleInputChange("occupants", e.target.value)}
             />
           </div>
-
+          {/*}
           <div className="flex items-center space-x-2">
             <Switch
               id="condensingBoiler"
@@ -102,7 +118,7 @@ const HeatingForm = () => {
             />
             <Label htmlFor="condensingBoiler">Brennwertgerät</Label>
           </div>
-
+          */}
           <div className="space-y-2">
             <Label htmlFor="roofCondition">Sanierungsstand Dach</Label>
             <Select
@@ -140,10 +156,10 @@ const HeatingForm = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="wallCondition">Sanierungsstand Wand</Label>
+            <Label htmlFor="windowsCondition">Sanierungsstand Fenster</Label>
             <Select
-              value={formData.wallCondition}
-              onValueChange={(value) => handleInputChange("wallCondition", value)}
+              value={formData.windowsCondition}
+              onValueChange={(value) => handleInputChange("windowsCondition", value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Wählen Sie den Zustand" />
@@ -172,8 +188,19 @@ const HeatingForm = () => {
           </div>
         </div>
       </div>
-
-      <ResultsDisplay results={results} formData={formData} />
+      </CardContent>
+      </Card>
+      <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calculator className="h-5 w-5" />
+              Ergebnisse
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+      <ResultsDisplay results={heatData} formData={formData} />
+      </CardContent>
+        </Card>
     </div>
   );
 };

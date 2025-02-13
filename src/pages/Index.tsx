@@ -1,18 +1,25 @@
 
 import HeatingForm from "@/components/HeatingForm";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calculator, Home, ThermometerSnowflake } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="min-h-screen p-4 sm:p-6 md:p-8 bg-gradient-to-b from-gray-50 to-gray-100">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8 text-center">
+    <div className="min-h-screen p-4 md:p-8 bg-gray-50">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+          <ThermometerSnowflake className="h-8 w-8 text-primary" />
           Heizlastberechnung
         </h1>
-        <Card className="p-6 shadow-lg bg-white/80 backdrop-blur-sm">
-          <HeatingForm />
-        </Card>
-      </div>
+        <p className="text-gray-600 mt-2">
+          Berechnen Sie die Heizlast Ihres Wohngebäudes
+        </p>
+      </header>
+
+      <div className="grid md:grid-cols-1 gap-6">
+        
+        <HeatingForm />
+    </div>
     </div>
   );
 };

@@ -82,14 +82,11 @@ export const HeatingForm = () => {
       [field]: value,
     }));
   };
-
-  const handleProjectSelect = (projectName: string) => {
-    const selectedProject = projects.find(
-      p => `${p.first_name} ${p.last_name}` === projectName
-    );
-
+const handleProjectSelect = (currentValue: string) => {
+    setSelectedProjectId(currentValue);
+    const selectedProject = projects.find(p => p.id === currentValue);
+  
     if (selectedProject) {
-      setSelectedProjectId(selectedProject.id);
       clientData.id = selectedProject.id;
       clientData.first_name = selectedProject.first_name;
       clientData.last_name = selectedProject.last_name;
@@ -144,8 +141,8 @@ export const HeatingForm = () => {
                         {projects.map((project) => (
                           <CommandItem
                             key={project.id}
-                            value={`${project.first_name} ${project.last_name}`}
-                            onSelect={(currentValue) => handleProjectSelect(currentValue)}
+                            value={project.first_name + " " + project.last_name}
+                            onSelect={() => handleProjectSelect(project.id)}
                           >
                             <Check
                               className={cn(

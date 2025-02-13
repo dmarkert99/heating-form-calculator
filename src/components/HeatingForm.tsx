@@ -14,21 +14,6 @@ import ResultsDisplay from "./ResultsDisplay";
 import { calculateHeatingLoad } from "@/lib/heatingCalculations";
 import { Calculator, Home } from "lucide-react";
 import { useProjectManagement } from "@/hooks/useProjectManagement";
-import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { Check, ChevronsUpDown } from "lucide-react"
 
 interface BuildingData {
   constructionYear: string;
@@ -60,8 +45,6 @@ export var heatData = {
 
 export const HeatingForm = () => {
   const { projects } = useProjectManagement();
-  const [open, setOpen] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   const [formData, setFormData] = useState<BuildingData>({
     constructionYear: "",
     livingSpace: "",
@@ -82,9 +65,8 @@ export const HeatingForm = () => {
       [field]: value,
     }));
   };
-const handleProjectSelect = (currentValue: string) => {
-    setSelectedProjectId(currentValue);
-    const selectedProject = projects.find(p => p.id === currentValue);
+const handleProjectSelect = (projectId: string) => {
+    const selectedProject = projects.find(p => p.id === projectId);
   
     if (selectedProject) {
       clientData.id = selectedProject.id;
@@ -97,7 +79,6 @@ const handleProjectSelect = (currentValue: string) => {
         livingSpace: selectedProject.living_area || "",
       }));
     }
-    setOpen(false);
   };
 
   heatData = calculateHeatingLoad(formData);
@@ -115,48 +96,19 @@ const handleProjectSelect = (currentValue: string) => {
           <div className="space-y-2">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Projekt auswählen</Label>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="w-full justify-between"
-                    >
-                      {selectedProjectId ? (
-                        projects.find((project) => project.id === selectedProjectId)?.first_name + " " +
-                        projects.find((project) => project.id === selectedProjectId)?.last_name
-                      ) : (
-                        "Projekt auswählen..."
-                      )}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                    <Command>
-                      <CommandInput placeholder="Namen eingeben..." />
-                      <CommandEmpty>Kein Projekt gefunden.</CommandEmpty>
-                      <CommandGroup>
-                        {projects.map((project) => (
-                          <CommandItem
-                            key={project.id}
-                            value={project.first_name + " " + project.last_name}
-                            onSelect={() => handleProjectSelect(project.id)}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                selectedProjectId === project.id ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {project.first_name} {project.last_name}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                <Label htmlFor="projectSelect">Projekt auswählen</Label>
+                <Select onValueChange={handleProjectSelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Wählen Sie ein Projekt" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.first_name} {project.last_name} - {project.postal_code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

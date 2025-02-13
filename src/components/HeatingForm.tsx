@@ -26,6 +26,12 @@ interface BuildingData {
   energyConsumption: string;
 }
 
+export var clientData ={
+  id: "",
+  first_name: "",
+  last_name: ""
+}
+
 export var heatData = {
   specificHeatingLoad: 0,
   baseHeatingLoad: 0,

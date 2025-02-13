@@ -43,13 +43,13 @@ export const calculateHeatingLoad = (data: BuildingData): CalculationResults => 
     type: 'roof' | 'windows' | 'facade'
   ): number => {
     if (!insulation) return 0;
-  
+
     const reductions = {
       roof: { teilsaniert: 0.05, saniert: 0.10 },
       windows: { teilsaniert: 0.05, saniert: 0.10 },
       facade: { teilsaniert: 0.10, saniert: 0.15 }
     };
-  
+
     if (insulation === 'unsaniert') return 0;
     return reductions[type][insulation as 'teilsaniert' | 'saniert'] || 0;
   };
@@ -59,20 +59,20 @@ export const calculateHeatingLoad = (data: BuildingData): CalculationResults => 
   const facadeReduction = calculateInsulationReduction(data.facadeCondition, 'facade');
 
   console.log("Reductions:", { roofReduction, windowsReduction, facadeReduction });
-  
+
   // Apply reductions to total load
   const totalReduction = roofReduction + windowsReduction + facadeReduction;
-  
+
   // Brennwertgerät-Faktor
   const condensingBoilerFactor = data.condensingBoiler ? 0.92 : 0.85;
 
   // Spezifische Heizlast berechnen
-  const specificHeatingLoad = baseLoadFactor * (1-totalReduction);//* condensingBoilerFactor;
+  const specificHeatingLoad = baseLoadFactor * (1 - totalReduction);//* condensingBoilerFactor;
 
   // Wohnfläche
   const livingSpace = parseFloat(data.livingSpace) || 0;
 
-  const unreducedLoad = baseLoadFactor*livingSpace/1000;
+  const unreducedLoad = baseLoadFactor * livingSpace / 1000;
 
   // Basis-Heizlast
   const baseHeatingLoad = (specificHeatingLoad * livingSpace) / 1000; // Umrechnung in kW

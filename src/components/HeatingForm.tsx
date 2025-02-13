@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -84,10 +83,13 @@ export const HeatingForm = () => {
     }));
   };
 
-  const handleProjectSelect = (currentValue: string) => {
-    setSelectedProjectId(currentValue);
-    const selectedProject = projects.find(p => p.id === currentValue);
+  const handleProjectSelect = (projectName: string) => {
+    const selectedProject = projects.find(
+      p => `${p.first_name} ${p.last_name}` === projectName
+    );
+
     if (selectedProject) {
+      setSelectedProjectId(selectedProject.id);
       clientData.id = selectedProject.id;
       clientData.first_name = selectedProject.first_name;
       clientData.last_name = selectedProject.last_name;
@@ -142,8 +144,8 @@ export const HeatingForm = () => {
                         {projects.map((project) => (
                           <CommandItem
                             key={project.id}
-                            value={project.first_name + " " + project.last_name}
-                            onSelect={() => handleProjectSelect(project.id)}
+                            value={`${project.first_name} ${project.last_name}`}
+                            onSelect={(currentValue) => handleProjectSelect(currentValue)}
                           >
                             <Check
                               className={cn(

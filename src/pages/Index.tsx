@@ -17,9 +17,9 @@ const Index = () => {
       </header>
 
       <div className="grid md:grid-cols-1 gap-6">
-        
+
         <HeatingForm />
-    </div>
+      </div>
     </div>
   );
 };

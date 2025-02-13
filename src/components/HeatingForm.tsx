@@ -14,6 +14,7 @@ import ResultsDisplay from "./ResultsDisplay";
 import { calculateHeatingLoad } from "@/lib/heatingCalculations";
 import { Calculator, Home } from "lucide-react";
 import { useProjectManagement } from "@/hooks/useProjectManagement";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BuildingData {
   constructionYear: string;
@@ -24,6 +25,7 @@ interface BuildingData {
   facadeCondition: string;
   windowsCondition: string;
   energyConsumption: string;
+  postal_code: string;
 }
 
 export var clientData = {
@@ -45,6 +47,10 @@ export var heatData = {
 
 export const HeatingForm = () => {
   const { projects } = useProjectManagement();
+  const [climateData, setClimateData] = useState<{
+    design_temperature: number;
+    average_temperature: number;
+  } | null>(null);
   const [formData, setFormData] = useState<BuildingData>({
     constructionYear: "",
     livingSpace: "",
@@ -54,29 +60,75 @@ export const HeatingForm = () => {
     facadeCondition: "unsaniert",
     windowsCondition: "unsaniert",
     energyConsumption: "",
+    postal_code:""
   });
 
-  const handleInputChange = (
+  const handleInputChange = async (
     field: keyof BuildingData,
     value: string | boolean
   ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
-    }));
+    }));/*
+    if(field=="postal_code"){
+      const { data } = await supabase
+      .from('climate_data')
+      .select(`
+        design_temperature,
+        average_temperature,
+        postal_code
+      `)
+      .eq('postal_code',formData.postal_code)
+      .maybeSingle();
+
+    if (data) {
+      console.log('Fetched heating data:', data);
+        setClimateData({
+          design_temperature: data.design_temperature,
+          average_temperature: data.average_temperature
+        });
+    }  
+    }
+*/
   };
-const handleProjectSelect = (projectId: string) => {
+const handleProjectSelect = async (projectId: string) => {
     const selectedProject = projects.find(p => p.id === projectId);
   
     if (selectedProject) {
       clientData.id = selectedProject.id;
       clientData.first_name = selectedProject.first_name;
       clientData.last_name = selectedProject.last_name;
+
+      const { data } = await supabase
+      .from('heat_pump_requests')
+      .select(`
+        climate_data!inner (
+          design_temperature,
+          average_temperature
+        )
+      `)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (data) {
+      console.log('Fetched heating data:', data);
+      if (data.climate_data) {
+        setClimateData({
+          design_temperature: data.climate_data.design_temperature,
+          average_temperature: data.climate_data.average_temperature
+        });
+      }
+    }  
       
       setFormData(prev => ({
         ...prev,
         constructionYear: selectedProject.construction_year || "",
         livingSpace: selectedProject.living_area || "",
+        postal_code: selectedProject.postal_code,
+        energyConsumption: selectedProject.fuel_consumption,
+        occupants: selectedProject.household_persons
       }));
     }
   };
@@ -109,6 +161,19 @@ const handleProjectSelect = (projectId: string) => {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="postal_code">Postleitzahl</Label>
+                <Input
+                  id="postal_code"
+                  type="number"
+                  placeholder="z.B. 39122"
+                  value={formData.postal_code}
+                  onChange={(e) =>
+                    handleInputChange("postal_code", e.target.value)
+                  }
+                />
               </div>
 
               <div className="space-y-2">
@@ -236,9 +301,11 @@ const handleProjectSelect = (projectId: string) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResultsDisplay results={heatData} formData={formData} />
+          <ResultsDisplay results={heatData} formData={formData} climateData={climateData}/>
         </CardContent>
+        
       </Card>
+      
     </div>
   );
 };

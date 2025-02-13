@@ -5,9 +5,13 @@ import { BuildingData, CalculationResults } from "@/lib/heatingCalculations";
 interface ResultsDisplayProps {
   results: CalculationResults;
   formData: BuildingData;
+  climateData: {
+    design_temperature: number;
+    average_temperature: number;
+  }
 }
 
-const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
+const ResultsDisplay = ({ results, formData, climateData }: ResultsDisplayProps) => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
@@ -92,6 +96,22 @@ const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-primary/10 p-4 rounded-lg">
+          <p className="text-sm text-gray-600">Norm-Tiefsttemperatur</p>
+          <p className="text-2xl font-bold text-primary">
+            {climateData ? `${climateData.design_temperature}°C` : "N/A"}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">Standortbasiert</p>
+        </div>
+        <div className="bg-primary/10 p-4 rounded-lg">
+          <p className="text-sm text-gray-600">Durchschnittstemperatur</p>
+          <p className="text-2xl font-bold text-primary">
+            {climateData ? `${climateData.average_temperature}°C` : "N/A"}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">Standortbasiert</p>
         </div>
       </div>
     </div>

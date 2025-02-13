@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateHeatingLoad } from "@/lib/heatingCalculations";
 import { Calculator, Home } from "lucide-react";
+import { useProjectManagement } from "@/hooks/useProjectManagement";
 
 interface BuildingData {
   constructionYear: string;
@@ -44,6 +45,7 @@ export var heatData = {
 }
 
 export const HeatingForm = () => {
+  const { projects } = useProjectManagement();
   const [formData, setFormData] = useState<BuildingData>({
     constructionYear: "",
     livingSpace: "",
@@ -65,6 +67,21 @@ export const HeatingForm = () => {
     }));
   };
 
+  const handleProjectSelect = (projectId: string) => {
+    const selectedProject = projects.find(p => p.id === projectId);
+    if (selectedProject) {
+      clientData.id = selectedProject.id;
+      clientData.first_name = selectedProject.first_name;
+      clientData.last_name = selectedProject.last_name;
+      
+      setFormData(prev => ({
+        ...prev,
+        constructionYear: selectedProject.construction_year || "",
+        livingSpace: selectedProject.living_area || "",
+      }));
+    }
+  };
+
   heatData = calculateHeatingLoad(formData);
 
   return (
@@ -79,6 +96,22 @@ export const HeatingForm = () => {
         <CardContent>
           <div className="space-y-2">
             <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="projectSelect">Projekt auswählen</Label>
+                <Select onValueChange={handleProjectSelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Wählen Sie ein Projekt" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.first_name} {project.last_name} - {project.postal_code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="constructionYear">Baujahr</Label>
                 <Input

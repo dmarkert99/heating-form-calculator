@@ -35,7 +35,7 @@ const ResultsDisplay = ({ results, formData }: ResultsDisplayProps) => {
         <div className="space-y-2">
           <h4 className="font-medium">1. Grundlast</h4>
           <p className="text-sm text-gray-600">
-            Spezifische Heizlast: {formData.livingSpace=="" ? 0 :Math.round(results.unreducedLoad/parseInt(formData.livingSpace)*100*1000)/100} W/m²
+            Spezifische Heizlast: {formData.livingSpace=="" ? 0 :Math.round(results.baseHeatingLoad/parseInt(formData.livingSpace)*100*1000)/100} W/m²
           </p>
           <p className="text-sm text-gray-600">
             Wohnfläche: {formData.livingSpace} m²

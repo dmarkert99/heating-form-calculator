@@ -11,24 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import ResultsDisplay from "./ResultsDisplay";
 import { calculateHeatingLoad } from "@/lib/heatingCalculations";
-import { Calculator, Home, ChevronsUpDown, Check } from "lucide-react";
+import { Calculator, Home} from "lucide-react";
 import { useProjectManagement } from "@/hooks/useProjectManagement";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 interface BuildingData {
   constructionYear: string;
@@ -60,8 +46,6 @@ export var heatData = {
 
 export const HeatingForm = () => {
   const { projects } = useProjectManagement();
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
   const [formData, setFormData] = useState<BuildingData>({
     constructionYear: "",
     livingSpace: "",
@@ -84,7 +68,6 @@ export const HeatingForm = () => {
   };
 
   const handleProjectSelect = (projectId: string) => {
-    setValue(projectId);
     const selectedProject = projects.find(p => p.id === projectId);
     if (selectedProject) {
       clientData.id = selectedProject.id;
@@ -97,7 +80,6 @@ export const HeatingForm = () => {
         livingSpace: selectedProject.living_area || "",
       }));
     }
-    setOpen(false);
   };
 
   heatData = calculateHeatingLoad(formData);
@@ -115,47 +97,19 @@ export const HeatingForm = () => {
           <div className="space-y-2">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label>Projekt auswählen</Label>
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="w-full justify-between"
-                    >
-                      {value
-                        ? projects.find((project) => project.id === value)
-                          ? `${projects.find((project) => project.id === value)?.first_name} ${projects.find((project) => project.id === value)?.last_name} - ${projects.find((project) => project.id === value)?.postal_code}`
-                          : "Projekt auswählen"
-                        : "Projekt auswählen"}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput placeholder="Suche nach Name oder PLZ..." />
-                      <CommandEmpty>Keine Projekte gefunden.</CommandEmpty>
-                      <CommandGroup>
-                        {projects.map((project) => (
-                          <CommandItem
-                            key={project.id}
-                            value={`${project.first_name} ${project.last_name} ${project.postal_code}`}
-                            onSelect={() => handleProjectSelect(project.id)}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                value === project.id ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {project.first_name} {project.last_name} - {project.postal_code}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+               <Label htmlFor="projectSelect">Projekt auswählen</Label>
+                <Select onValueChange={handleProjectSelect}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Wählen Sie ein Projekt" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.first_name} {project.last_name} - {project.postal_code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">

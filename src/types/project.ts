@@ -6,4 +6,7 @@ export interface Project {
   postal_code: string;
   living_area?: string;
   construction_year?: string;
+  fuel_consumption?: string;
+  household_persons?: string;
+  city?: string;
 }

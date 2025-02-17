@@ -26,6 +26,7 @@ interface BuildingData {
   windowsCondition: string;
   energyConsumption: string;
   postal_code: string;
+  city: string;
 }
 
 export var clientData = {
@@ -60,7 +61,8 @@ export const HeatingForm = () => {
     facadeCondition: "unsaniert",
     windowsCondition: "unsaniert",
     energyConsumption: "",
-    postal_code:""
+    postal_code: "",
+    city: "",
   });
 
   const handleInputChange = async (
@@ -70,58 +72,72 @@ export const HeatingForm = () => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
-    }));/*
-    if(field=="postal_code"){
+    }));
+    if (field == "postal_code") {
+      console.log('Fetched PLZ:', value);
       const { data } = await supabase
-      .from('climate_data')
-      .select(`
+        .from('climate_data')
+        .select(`
         design_temperature,
         average_temperature,
-        postal_code
+        postal_code,
+        city
       `)
-      .eq('postal_code',formData.postal_code)
-      .maybeSingle();
+        .eq('postal_code', value.toString())
+        .order('postal_code', { ascending: true })
+        .limit(1)
+        .maybeSingle();
 
-    if (data) {
-      console.log('Fetched heating data:', data);
+      if (data) {
+
+        console.log('Fetched heating data:', data);
         setClimateData({
           design_temperature: data.design_temperature,
           average_temperature: data.average_temperature
         });
-    }  
+        setFormData(prev => ({
+          ...prev,
+          city: data.city || ""
+        }));
+      }
     }
-*/
+
   };
-const handleProjectSelect = async (projectId: string) => {
+  const handleProjectSelect = async (projectId: string) => {
     const selectedProject = projects.find(p => p.id === projectId);
-  
+
     if (selectedProject) {
       clientData.id = selectedProject.id;
       clientData.first_name = selectedProject.first_name;
       clientData.last_name = selectedProject.last_name;
 
       const { data } = await supabase
-      .from('heat_pump_requests')
-      .select(`
+        .from('heat_pump_requests')
+        .select(`
         climate_data!inner (
           design_temperature,
-          average_temperature
+          average_temperature,
+          city
         )
       `)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-    if (data) {
-      console.log('Fetched heating data:', data);
-      if (data.climate_data) {
-        setClimateData({
-          design_temperature: data.climate_data.design_temperature,
-          average_temperature: data.climate_data.average_temperature
-        });
+      if (data) {
+        console.log('Fetched heating data:', data);
+        if (data.climate_data) {
+          setClimateData({
+            design_temperature: data.climate_data.design_temperature,
+            average_temperature: data.climate_data.average_temperature
+          });
+          setFormData(prev => ({
+            ...prev,
+            city: data.climate_data.city
+          }))
+        }
       }
-    }  
-      
+
       setFormData(prev => ({
         ...prev,
         constructionYear: selectedProject.construction_year || "",
@@ -172,6 +188,19 @@ const handleProjectSelect = async (projectId: string) => {
                   value={formData.postal_code}
                   onChange={(e) =>
                     handleInputChange("postal_code", e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="city">Stadt</Label>
+                <Input
+                  id="city"
+                  type="string"
+                  placeholder="z.B. 39122"
+                  value={formData.city}
+                  onChange={(e) =>
+                    handleInputChange("city", e.target.value)
                   }
                 />
               </div>
@@ -301,11 +330,11 @@ const handleProjectSelect = async (projectId: string) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResultsDisplay results={heatData} formData={formData} climateData={climateData}/>
+          <ResultsDisplay results={heatData} formData={formData} climateData={climateData} />
         </CardContent>
-        
+
       </Card>
-      
+
     </div>
   );
 };

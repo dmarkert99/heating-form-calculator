@@ -179,30 +179,33 @@ export const HeatingForm = () => {
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="postal_code">Postleitzahl</Label>
-                <Input
-                  id="postal_code"
-                  type="number"
-                  placeholder="z.B. 39122"
-                  value={formData.postal_code}
-                  onChange={(e) =>
-                    handleInputChange("postal_code", e.target.value)
-                  }
-                />
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="postal_code">Postleitzahl</Label>
+                  <Input
+                    id="postal_code"
+                    type="number"
+                    placeholder="z.B. 39122"
+                    value={formData.postal_code}
+                    onChange={(e) =>
+                      handleInputChange("postal_code", e.target.value)
+                    }
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="city">Stadt</Label>
-                <Input
-                  id="city"
-                  type="string"
-                  placeholder="z.B. 39122"
-                  value={formData.city}
-                  onChange={(e) =>
-                    handleInputChange("city", e.target.value)
-                  }
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="city">Stadt</Label>
+                  <Input
+                    id="city"
+                    type="text"
+                    value={formData.city}
+                    readOnly
+                    className="bg-gray-100"
+                    onChange={(e) =>
+                      handleInputChange("city", e.target.value)
+                    }
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -332,9 +335,7 @@ export const HeatingForm = () => {
         <CardContent>
           <ResultsDisplay results={heatData} formData={formData} climateData={climateData} />
         </CardContent>
-
       </Card>
-
     </div>
   );
 };

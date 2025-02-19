@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calculator, Construction,  FileText  } from "lucide-react";
+import { Calculator, Construction,  FileText, ThermometerSnowflake  } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -32,7 +32,7 @@ const Index = () => {
         <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/heizlast')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Calculator className="h-5 w-5 text-primary" />
+              <ThermometerSnowflake className="h-5 w-5 text-primary" />
               Heizlastberechnung
             </CardTitle>
           </CardHeader>

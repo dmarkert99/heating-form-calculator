@@ -118,8 +118,10 @@ export const HeatingForm = () => {
           design_temperature,
           average_temperature,
           city
-        )
+        ),
+        id
       `)
+        .eq('id',projectId)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();

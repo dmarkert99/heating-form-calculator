@@ -145,7 +145,9 @@ export const HeatingForm = () => {
         postal_code: selectedProject.postal_code,
         energyConsumption: selectedProject.fuel_consumption,
         occupants: selectedProject.household_persons,
-        roofCondition: selectedProject.facade_insulated
+        roofCondition: selectedProject.roof_insulated.toLowerCase(),
+        facadeCondition: selectedProject.facade_insulated.toLowerCase(),
+        windowsCondition: selectedProject.windows_insulated.toLowerCase()
       }));
     }
   };

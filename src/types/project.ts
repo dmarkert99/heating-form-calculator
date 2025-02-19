@@ -9,4 +9,7 @@ export interface Project {
   fuel_consumption?: string;
   household_persons?: string;
   city?: string;
+  facade_insulated?: string;
+  windows_insulated?: string;
+  roof_insulated?: string;
 }

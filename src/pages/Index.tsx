@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calculator, Construction, ThermometerSnowflake } from "lucide-react";
+import { Calculator, Construction,  FileText  } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -11,6 +11,24 @@ const Index = () => {
     <div className="min-h-screen p-4 md:p-8 bg-gray-50">
 
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/datenerfassung')}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary" />
+              Datenerfassung
+            </CardTitle>
+          </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                Erfassen Sie die Daten des Kunden
+              </p>
+              <Button variant="outline" className="w-full">
+                Zur Erfassung
+              </Button>
+            </CardContent>
+        </Card>
+
         <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/heizlast')}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

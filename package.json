@@ -2,7 +2,6 @@
   "name": "vite_react_shadcn_ts",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://dmarkert99.github.io/heating-form-calculator/",
   "type": "module",
   "scripts": {
     "predeploy" : "npm run build",

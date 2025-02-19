@@ -1,8 +1,9 @@
 
 import { Card } from "@/components/ui/card";
 import { BuildingData, CalculationResults } from "@/lib/heatingCalculations";
+import { HeatingLoadChart } from "./HeatingLoadChart";
 
-interface ResultsDisplayProps {
+export interface ResultsDisplayProps {
   results: CalculationResults;
   formData: BuildingData;
   climateData: {
@@ -114,6 +115,9 @@ const ResultsDisplay = ({ results, formData, climateData }: ResultsDisplayProps)
           <p className="text-xs text-gray-500 mt-1">Standortbasiert</p>
         </div>
       </div>
+      <div className="space-y-6">
+      <HeatingLoadChart results={results} formData={formData} climateData={climateData} />
+    </div>
     </div>
   );
 };
